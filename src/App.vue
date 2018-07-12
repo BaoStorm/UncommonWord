@@ -18,9 +18,10 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
   box-sizing: border-box;
 }
+
+.page,body{background-color:#f8f8f8}
 /* this rule will be remove */
 * {
   transition: width 2s;

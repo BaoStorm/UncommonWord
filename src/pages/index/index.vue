@@ -1,24 +1,16 @@
 <template>
-  <div class="container" @click="clickHandle('test click', $event)">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
+  <div class="page" @click="clickHandle('test click', $event)" style="background-color:#f8f8f8">
+    <div class="weui-cells__title">待识别文本</div>
+    <div class="weui-cells weui-cells_after-title">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <textarea class="weui-textarea" placeholder="请输入文本" rows="3" v-model="word"></textarea>
+          <div class="weui-textarea-counter">
+            <span>{{wordUseCount}}</span>/200
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
   </div>
 </template>
 
@@ -28,15 +20,23 @@ import card from '@/components/card'
 export default {
   data () {
     return {
-      motto: 'Hello World',
-      userInfo: {}
+      word: '',
+      wordUseCount: 0,
+      checkboxItems: [
+        { name: 'standard is dealt for u.', value: '0', checked: true },
+        { name: 'standard is dealicient for u.', value: '1', checked: false }
+      ]
     }
   },
 
   components: {
     card
   },
-
+  watch: {
+    word () {
+      this.wordUseCount = this.word.length
+    }
+  },
   methods: {
     bindViewTap () {
       const url = '../logs/main'
