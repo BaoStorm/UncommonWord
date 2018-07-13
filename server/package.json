@@ -1,0 +1,26 @@
+{
+  "name": "uncommonword-server",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www.js",
+    "start:strict": "node --use-strict ./bin/www.js"
+  },
+  "dependencies": {
+    "baidu-aip-sdk": "^2.3.3",
+    "body-parser": "^1.18.3",
+    "cheerio": "^1.0.0-rc.2",
+    "cookie-parser": "^1.4.3",
+    "debug": "^3.1.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "https": "^1.0.0",
+    "iconv-lite": "^0.4.23",
+    "morgan": "^1.9.0",
+    "nodejieba": "^2.2.6",
+    "pinyin": "^2.8.3",
+    "querystring": "^0.2.0",
+    "serve-favicon": "^2.5.0",
+    "superagent": "^3.8.3"
+  }
+}

@@ -1,26 +1,29 @@
 <template>
-  <div class="page" @click="clickHandle('test click', $event)" style="background-color:#f8f8f8">
+  <div class="page" style="background-color:#f8f8f8">
     <div class="weui-cells__title">待识别文本</div>
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell">
         <div class="weui-cell__bd">
           <textarea class="weui-textarea" placeholder="请输入文本" rows="3" v-model="word"></textarea>
           <div class="weui-textarea-counter">
-            <span>{{wordUseCount}}</span>/200
+            <span>{{wordUseCount}}</span>/{{maxWordCount}}
           </div>
         </div>
       </div>
+    </div>
+    <div style="padding:10rpx;">
+      <button type="primary" @click="identify">识别</button>
     </div>
   </div>
 </template>
 
 <script>
-import card from '@/components/card'
-
+import baiduApi from '@/api/baidu'
 export default {
   data () {
     return {
       word: '',
+      maxWordCount: 200,
       wordUseCount: 0,
       checkboxItems: [
         { name: 'standard is dealt for u.', value: '0', checked: true },
@@ -28,12 +31,11 @@ export default {
       ]
     }
   },
-
-  components: {
-    card
-  },
   watch: {
-    word () {
+    word (value, oldValue) {
+      if (value.length > this.maxWordCount) {
+        this.word = oldValue
+      }
       this.wordUseCount = this.word.length
     }
   },
@@ -54,8 +56,12 @@ export default {
         }
       })
     },
-    clickHandle (msg, ev) {
-      console.log('clickHandle:', msg, ev)
+    identify () {
+      console.log(111)
+      baiduApi.getToken()
+        .then((res) => {
+          console.log(res)
+        })
     }
   },
 
