@@ -17,11 +17,33 @@ var client = new AipNlpClient(APP_ID, API_KEY, SECRET_KEY)
 
 exports.lexer = (req, res) => {
   var text = req.query.text
+
   // 调用词法分析
   lexer(text)
     .then(data => {
       console.log(data)
       res.send(JSON.stringify(data))
+    }).catch(function (err) {
+      // 如果发生网络错误
+      console.log(err)
+    })
+}
+
+exports.lexerStr = (req, res) => {
+  var text = req.query.text
+
+  // 调用词法分析
+  lexer(text)
+    .then(data => {
+      console.log(data)
+      var text = ''
+      var pinyin = ''
+      data.forEach(n => {
+        text = text + n.text
+        pinyin = pinyin + ' ' + n.pinyins.join(',')
+      })
+
+      res.send(`${text}<br/>${pinyin}`)
     }).catch(function (err) {
       // 如果发生网络错误
       console.log(err)
@@ -60,12 +82,31 @@ const citiao = function (text) {
       .end(function (err, data) {
         if (err == null) {
           var $ = cheerio.load(data.text)
+
           var pinyins = []
-          if (text.length > 1) {
-            var pinyin = $('#pinyin h2 span b').html().replace('[ ', '').replace(' ]', '').replace('[', '').replace(']', '')
-            pinyins = pinyin.split(' ')
+          if ($('#pinyin').html() != null) {
+            if (text.length > 1) {
+              var pinyinStr = $('#pinyin h2 span b').html().replace('[ ', '').replace(' ]', '').replace('[', '').replace(']', '')
+              pinyins = pinyinStr.split(' ')
+            } else {
+              pinyins.push($('#pinyin span b').html())
+            }
           } else {
-            pinyins.push($('#pinyin span b').html())
+            pinyins = pinyin(text, {
+              // heteronym: true, // 启用多音字模式
+              // segment: true // 启用分词，以解决多音字问题。
+            })
+          }
+
+          if (pinyins[0].constructor === Array) {
+            var newPinyins = []
+            pinyins.forEach(n => {
+              newPinyins.push(n[0])
+            })
+            pinyins = newPinyins
+          }
+          if (pinyins[0] === '[]') {
+            pinyins = []
           }
           resolve({text: text, pinyins: pinyins})
         }

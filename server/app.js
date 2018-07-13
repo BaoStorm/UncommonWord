@@ -23,6 +23,7 @@ app.get('/__webpack_hmr', function (req, res) {
 })
 
 app.get('/baidu/lexer', routes_baidu.lexer)
+app.get('/baidu/lexerStr', routes_baidu.lexerStr)
 
 app.use(function (req, res, next) {
   var err = new Error('Not Found')
