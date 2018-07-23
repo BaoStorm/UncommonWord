@@ -1,6 +1,5 @@
 let url = require('url')
 let dealFn = require('./dealfn.js')
-let iso8859Convert = require('./ISO8859-1ToUTF8.js')
 var iconv = require('iconv-lite')
 var https = require('http')
 var qs = require('querystring')
@@ -95,11 +94,11 @@ const citiao = function (text) {
           if ($('#pinyin').html() != null) {
             if (text.length > 1) {
               var pinyinStr = $('#pinyin h2 span b').html().replace('[ ', '').replace(' ]', '').replace('[', '').replace(']', '')
-              pinyinStr = iso8859Convert.convertToUTF8(pinyinStr)
+              pinyinStr = unUnicode(pinyinStr)
               pinyins = pinyinStr.split(' ')
             } else {
               pinyinStr = $('#pinyin span b').html()
-              pinyinStr = iso8859Convert.convertToUTF8(pinyinStr)
+              pinyinStr = unUnicode(pinyinStr)
               pinyins.push(pinyinStr)
             }
           } else {
@@ -123,4 +122,20 @@ const citiao = function (text) {
         }
       })
   })
+}
+
+const unUnicode = function (str) {
+  var patt = /&#x\w{2,3};/g
+  var fields = str.match(patt)
+  if (fields) {
+    fields.forEach(function (item) {
+      var newValue = item.replace('&#x', '').replace(';', '')
+      for (var i = 0; i <= 4 - newValue.length; i++) {
+        newValue = '0' + newValue
+      }
+      newValue = '\\u' + newValue
+      str = str.replace(item, newValue.toLowerCase())
+    })
+    return unescape(str.replace(/\\/g, '%'))
+  }
 }
