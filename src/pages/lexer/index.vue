@@ -22,6 +22,7 @@ export default {
   },
   mounted () {
     this.word = this.$root.$mp.query.text
+    this.lexers = []
     this.identify(this)
   },
   methods: {
@@ -38,11 +39,6 @@ export default {
           // self.$emit('lexers', res.data)
           wx.hideToast()
         })
-    }
-  },
-  watch: {
-    lexers: (value) => {
-      console.log(value)
     }
   }
 }
