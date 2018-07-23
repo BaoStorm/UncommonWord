@@ -18,7 +18,6 @@
 </template>
 
 <script>
-import baiduApi from '@/api/baidu'
 export default {
   data () {
     return {
@@ -57,11 +56,17 @@ export default {
       })
     },
     identify () {
-      console.log(111)
-      baiduApi.getToken()
-        .then((res) => {
-          console.log(res)
+      if (this.word.length === 0) {
+        wx.showToast({
+          title: '请输入识别文本',
+          icon: 'none',
+          duration: 2000
         })
+        return
+      }
+      wx.navigateTo({
+        url: `../lexer/main?text=${this.word}`
+      })
     }
   },
 

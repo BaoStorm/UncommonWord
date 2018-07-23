@@ -6,5 +6,6 @@ module.exports = merge(prodEnv, {
   baidu_appId:'"11530639"',
   baidu_apiKey:'"fzR5D1L7UHwC1zad7qUw9aUg"',
   baidu_secretKey:'"r9IriCpK69xImXNywoCqfeP9q6mVZfSu"',
-  baidu_hostname:'"https://aip.baidubce.com"'
+  baidu_hostname:'"https://aip.baidubce.com"',
+  api_url:'"http://wx.baostorm.com"'
 })

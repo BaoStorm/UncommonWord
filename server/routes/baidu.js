@@ -22,7 +22,13 @@ exports.lexer = (req, res) => {
   lexer(text)
     .then(data => {
       console.log(data)
-      res.send(JSON.stringify(data))
+      let lexer = []
+      data.forEach(n => {
+        for (var i = 0; i < n.text.length; i++) {
+          lexer.push({text: n.text[i], pinyin: n.pinyins[i]})
+        }
+      })
+      res.send(JSON.stringify(lexer))
     }).catch(function (err) {
       // 如果发生网络错误
       console.log(err)

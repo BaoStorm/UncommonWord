@@ -11,8 +11,6 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "axios": "^0.18.0",
-    "es6-promise": "^4.2.4",
     "mpvue": "^1.0.11",
     "querystring": "^0.2.0",
     "vuex": "^3.0.1"
