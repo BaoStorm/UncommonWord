@@ -1,9 +1,12 @@
 let url = require('url')
+var fs = require('fs')
 let dealFn = require('./dealfn.js')
 let iso8859Convert = require('./ISO8859-1ToUTF8.js')
 var iconv = require('iconv-lite')
 var https = require('http')
 var qs = require('querystring')
+var path = require('path')
+var formidable = require('formidable')
 var cheerio = require('cheerio')
 var request = require('superagent')
 var superagent = require('superagent-charset')(request)
@@ -55,6 +58,58 @@ exports.lexerStr = (req, res) => {
       // 如果发生网络错误
       console.log(err)
     })
+}
+
+exports.ocr = (req, res) => {
+  var file = req.file
+
+  console.log('文件类型：%s', file.mimetype)
+  console.log('原始文件名：%s', file.originalname)
+  console.log('文件大小：%s', file.size)
+  console.log('文件保存路径：%s', file.path)
+  // console.log(file.path)
+  var image = fs.readFileSync(file.path).toString('base64')
+
+  var options = {}
+  options['language_type'] = 'CHN_ENG'
+  options['detect_direction'] = 'true'
+  options['detect_language'] = 'true'
+  options['probability'] = 'true'
+  console.log(options)
+  // 带参数调用通用文字识别, 图片参数为本地图片
+  client.generalBasicUrl('https://www.baidu.com/img/bd_logo1.png', options).then(function (result) {
+    console.log(JSON.stringify(result))
+    res.send(JSON.stringify(result))
+  }).catch(function (err) {
+    // 如果发生网络错误
+    console.log(1)
+    console.log(err)
+  })
+  res.send('ok')
+  // var form = new formidable.IncomingForm()
+  // form.encoding = 'utf-8'
+  // form.uploadDir = path.join(__dirname, '/../upload')
+  // console.log(form.uploadDir)
+  // form.keepExtensions = true // 保留后缀
+  // form.maxFieldsSize = 2 * 1024 * 1024
+  // form.parse(req, function (err, fields, files) {
+  //   console.log(err, fields, files)
+  //   var image = fs.readFileSync(files.the_file.path).toString('base64')
+
+  //   var options = {}
+  //   options['language_type'] = 'CHN_ENG'
+  //   options['detect_direction'] = 'true'
+  //   options['detect_language'] = 'true'
+  //   options['probability'] = 'true'
+
+  //   // 带参数调用通用文字识别, 图片参数为本地图片
+  //   client.generalBasic(image, options).then(function (result) {
+  //     res.send(JSON.stringify(result))
+  //   }).catch(function (err) {
+  //   // 如果发生网络错误
+  //     console.log(err)
+  //   })
+  // })
 }
 
 const lexer = function (text) {
