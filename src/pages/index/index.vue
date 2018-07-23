@@ -64,10 +64,8 @@ export default {
         })
         return
       }
-      var reg = /[^\u4e00-\u9fa5]/g
-      let word = this.word.replace(reg, '')
       wx.navigateTo({
-        url: `../lexer/main?text=${word}`
+        url: `../lexer/main?text=${this.word}`
       })
     }
   },
