@@ -1,10 +1,12 @@
 let url = require('url')
 let dealFn = require('./dealfn.js')
+let iso8859Convert = require('./ISO8859-1ToUTF8.js')
 var iconv = require('iconv-lite')
 var https = require('http')
 var qs = require('querystring')
 var cheerio = require('cheerio')
-var superagent = require('superagent')
+var request = require('superagent')
+var superagent = require('superagent-charset')(request)
 var pinyin = require('pinyin')
 var AipNlpClient = require('baidu-aip-sdk').nlp
 
@@ -21,7 +23,6 @@ exports.lexer = (req, res) => {
   // 调用词法分析
   lexer(text)
     .then(data => {
-      console.log(data)
       let lexer = []
       data.forEach(n => {
         for (var i = 0; i < n.text.length; i++) {
@@ -85,6 +86,7 @@ const citiao = function (text) {
       .get(`http://hanyu.baidu.com/s`)
       .query({wd: text})
       .query({ptype: 'zici'})
+      .charset()
       .end(function (err, data) {
         if (err == null) {
           var $ = cheerio.load(data.text)
@@ -93,9 +95,12 @@ const citiao = function (text) {
           if ($('#pinyin').html() != null) {
             if (text.length > 1) {
               var pinyinStr = $('#pinyin h2 span b').html().replace('[ ', '').replace(' ]', '').replace('[', '').replace(']', '')
+              pinyinStr = iso8859Convert.convertToUTF8(pinyinStr)
               pinyins = pinyinStr.split(' ')
             } else {
-              pinyins.push($('#pinyin span b').html())
+              pinyinStr = $('#pinyin span b').html()
+              pinyinStr = iso8859Convert.convertToUTF8(pinyinStr)
+              pinyins.push(pinyinStr)
             }
           } else {
             pinyins = pinyin(text, {

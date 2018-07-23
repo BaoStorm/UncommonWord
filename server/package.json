@@ -15,12 +15,14 @@
     "ejs": "^2.6.1",
     "express": "^4.16.3",
     "https": "^1.0.0",
+    "iconv": "^2.3.0",
     "iconv-lite": "^0.4.23",
     "morgan": "^1.9.0",
     "nodejieba": "^2.2.6",
     "pinyin": "^2.8.3",
     "querystring": "^0.2.0",
     "serve-favicon": "^2.5.0",
-    "superagent": "^3.8.3"
+    "superagent": "^3.8.3",
+    "superagent-charset": "^1.2.0"
   }
 }
