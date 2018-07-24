@@ -148,13 +148,17 @@ const citiao = function (text) {
           var pinyins = []
           if ($('#pinyin').html() != null) {
             if (text.length > 1) {
-              var pinyinStr = $('#pinyin h2 span b').html().replace('[ ', '').replace(' ]', '').replace('[', '').replace(']', '')
-              pinyinStr = unUnicode(pinyinStr)
-              pinyins = pinyinStr.split(' ')
+              if ($('#pinyin h2 span b').html() != null) {
+                var pinyinStr = $('#pinyin h2 span b').html().replace('[ ', '').replace(' ]', '').replace('[', '').replace(']', '')
+                pinyinStr = unUnicode(pinyinStr)
+                pinyins = pinyinStr.split(' ')
+              }
             } else {
-              pinyinStr = $('#pinyin span b').html()
-              pinyinStr = unUnicode(pinyinStr)
-              pinyins.push(pinyinStr)
+              if ($('#pinyin span b').html() != null) {
+                pinyinStr = $('#pinyin span b').html()
+                pinyinStr = unUnicode(pinyinStr)
+                pinyins.push(pinyinStr)
+              }
             }
           } else {
             pinyins = pinyin(text, {
@@ -162,15 +166,20 @@ const citiao = function (text) {
               // segment: true // 启用分词，以解决多音字问题。
             })
           }
-          console.log(pinyins)
-          if (pinyins[0].constructor === Array) {
+          if (pinyins.length === 0) {
+            pinyins = pinyin(text, {
+              // heteronym: true, // 启用多音字模式
+              // segment: true // 启用分词，以解决多音字问题。
+            })
+          }
+          if (pinyins.length > 0 && pinyins[0].constructor === Array) {
             var newPinyins = []
             pinyins.forEach(n => {
               newPinyins.push(n[0])
             })
             pinyins = newPinyins
           }
-          if (pinyins[0] === '[]') {
+          if (pinyins.length > 0 && pinyins[0] === '[]') {
             pinyins = []
           }
           resolve({text: text, pinyins: pinyins})
