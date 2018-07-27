@@ -3,5 +3,5 @@ var prodEnv = require('./prod.env')
 
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
-  api_url:'"https://wx.baostorm.com"'
+  api_url:'"http://localhost:9090"'
 })

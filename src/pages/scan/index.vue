@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import baiduApi from '@/api/baidu'
 export default {
   data () {
     return {
@@ -19,19 +19,36 @@ export default {
   },
   onLoad () {
     this.ctx = wx.createCameraContext()
-    console.log(this.ctx)
   },
   methods: {
     camera: function () {
-      console.log(this.ctx)
+      var self = this
+      wx.showToast({
+        title: '努力识别中...',
+        icon: 'loading',
+        duration: 2000
+      })
       this.ctx.takePhoto({
         quality: 'high',
         success: (res) => {
-          console.log(res)
-          this.imagePath = res.tempImagePath
-          api.uploadFile(this.imagePath)
+          self.imagePath = res.tempImagePath
+          baiduApi.ocr(self.imagePath)
             .then(res => {
-              console.log(res)
+              wx.hideToast()
+              if (res.statusCode === 200) {
+                var data = JSON.parse(res.data)
+                var words = ''
+                data.words_result.forEach(n => {
+                  if (n.probability && n.probability.average > 70) {
+                    words += n.words
+                  }
+                })
+                var reg = /[^\u4e00-\u9fa5]/g
+                let word = words.replace(reg, '')
+                wx.navigateTo({
+                  url: `../lexer/main?text=${word}`
+                })
+              }
             })
         }
       })

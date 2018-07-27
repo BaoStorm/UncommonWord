@@ -17,23 +17,23 @@ export default {
       navigationBarBackgroundColor: '#fff',
       navigationBarTitleText: '生僻字识别',
       navigationBarTextStyle: 'black'
+    },
+    tabBar: {
+      color: '#999999',
+      selectedColor: '#1AAD16',
+      backgroundColor: '#ffffff',
+      borderStyle: 'white',
+      /* eslint-disable */
+      list: [{
+          pagePath: 'pages/index/main',
+          text: '文本'
+        },
+        {
+          pagePath: 'pages/scan/main',
+          text: '扫一扫'
+        }
+      ]
+      /* eslint-enable */
     }
-    // tabBar: {
-    //   color: '#999999',
-    //   selectedColor: '#1AAD16',
-    //   backgroundColor: '#ffffff',
-    //   borderStyle: 'white',
-    //   /* eslint-disable */
-    //   list: [{
-    //       pagePath: 'pages/index/main',
-    //       text: '文本'
-    //     },
-    //     {
-    //       pagePath: 'pages/scan/main',
-    //       text: '扫一扫'
-    //     }
-    //   ]
-    //   /* eslint-enable */
-    // }
   }
 }

@@ -12,6 +12,19 @@ const getLexer = text => {
   })
 }
 
+const ocr = (filePath) => {
+  return new Promise((resolve, reject) => {
+    wx.uploadFile({
+      url: `${process.env.api_url}/baidu/ocr`,
+      filePath: filePath,
+      name: 'file',
+      success: function (res) {
+        resolve(res)
+      }
+    })
+  })
+}
 export default{
-  getLexer
+  getLexer,
+  ocr
 }

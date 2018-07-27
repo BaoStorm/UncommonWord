@@ -4,7 +4,7 @@
     <div class="weui-cells weui-cells_after-title">
       <div class="weui-cell">
         <div class="weui-cell__bd">
-          <textarea class="weui-textarea" placeholder="请输入文本" rows="3" v-model="word"></textarea>
+          <textarea class="weui-textarea" placeholder="请粘贴待识别文本" rows="3" v-model="word"></textarea>
           <div class="weui-textarea-counter">
             <span>{{wordUseCount}}</span>/{{maxWordCount}}
           </div>
@@ -58,7 +58,7 @@ export default {
     identify () {
       if (this.word.length === 0) {
         wx.showToast({
-          title: '请输入识别文本',
+          title: '请粘贴待识别文本',
           icon: 'none',
           duration: 2000
         })

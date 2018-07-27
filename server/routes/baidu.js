@@ -11,13 +11,17 @@ var request = require('superagent')
 var superagent = require('superagent-charset')(request)
 var pinyin = require('pinyin')
 var AipNlpClient = require('baidu-aip-sdk').nlp
+var AipOcrClient = require('baidu-aip-sdk').ocr
 
 var APP_ID = '11530639'
 var API_KEY = 'fzR5D1L7UHwC1zad7qUw9aUg'
 var SECRET_KEY = 'r9IriCpK69xImXNywoCqfeP9q6mVZfSu'
 
 // 新建一个对象，建议只保存一个对象调用服务接口
-var client = new AipNlpClient(APP_ID, API_KEY, SECRET_KEY)
+var nlpClient = new AipNlpClient(APP_ID, API_KEY, SECRET_KEY)
+
+// 新建一个对象，建议只保存一个对象调用服务接口
+var ocrClient = new AipOcrClient(APP_ID, API_KEY, SECRET_KEY)
 
 exports.lexer = (req, res) => {
   var text = req.query.text
@@ -60,60 +64,33 @@ exports.lexerStr = (req, res) => {
 }
 
 exports.ocr = (req, res) => {
-  // var file = req.file
-
-  // console.log('文件类型：%s', file.mimetype)
-  // console.log('原始文件名：%s', file.originalname)
-  // console.log('文件大小：%s', file.size)
-  // console.log('文件保存路径：%s', file.path)
-  // // console.log(file.path)
-  // var image = fs.readFileSync(file.path).toString('base64')
-
-  // var options = {}
-  // options['language_type'] = 'CHN_ENG'
-  // options['detect_direction'] = 'true'
-  // options['detect_language'] = 'true'
-  // options['probability'] = 'true'
-  // console.log(options)
-  // // 带参数调用通用文字识别, 图片参数为本地图片
-  // client.generalBasicUrl('https://www.baidu.com/img/bd_logo1.png', options).then(function (result) {
-  //   console.log(JSON.stringify(result))
-  //   res.send(JSON.stringify(result))
-  // }).catch(function (err) {
-  //   // 如果发生网络错误
-  //   console.log(1)
-  //   console.log(err)
-  // })
-  res.send('ok')
-  // var form = new formidable.IncomingForm()
-  // form.encoding = 'utf-8'
-  // form.uploadDir = path.join(__dirname, '/../upload')
-  // console.log(form.uploadDir)
-  // form.keepExtensions = true // 保留后缀
-  // form.maxFieldsSize = 2 * 1024 * 1024
-  // form.parse(req, function (err, fields, files) {
-  //   console.log(err, fields, files)
-  //   var image = fs.readFileSync(files.the_file.path).toString('base64')
-
-  //   var options = {}
-  //   options['language_type'] = 'CHN_ENG'
-  //   options['detect_direction'] = 'true'
-  //   options['detect_language'] = 'true'
-  //   options['probability'] = 'true'
-
-  //   // 带参数调用通用文字识别, 图片参数为本地图片
-  //   client.generalBasic(image, options).then(function (result) {
-  //     res.send(JSON.stringify(result))
-  //   }).catch(function (err) {
-  //   // 如果发生网络错误
-  //     console.log(err)
-  //   })
-  // })
+  try {
+    var file = req.file
+    var path = file.path
+    var image = fs.readFileSync(path).toString('base64')
+    fs.unlink(path, function () {})
+    var options = {}
+    options['language_type'] = 'CHN_ENG'
+    options['detect_direction'] = 'true'
+    options['detect_language'] = 'true'
+    options['probability'] = 'true'
+    // 带参数调用通用文字识别, 图片参数为本地图片
+    ocrClient.generalBasic(image, options)
+      .then(function (result) {
+        res.send(JSON.stringify(result))
+      }).catch(function (err) {
+        // 如果发生网络错误
+        console.log(err)
+      })
+  } catch (e) {
+    console.log(e)
+    res.send(JSON.stringify({words_result: []}))
+  }
 }
 
 const lexer = function (text) {
   return new Promise(function (resolve, reject) {
-    client.lexer(text).then(function (result) {
+    nlpClient.lexer(text).then(function (result) {
       var promises = []
       result.items.forEach(n => {
         promises.push(citiao(n.item))
